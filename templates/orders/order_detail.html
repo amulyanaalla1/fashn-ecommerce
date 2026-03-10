@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+<h2 class="mb-4">Order #{{ order.id }}</h2>
+
+<!-- Delivery Address -->
+<div class="card mb-4 shadow-sm">
+<div class="card-body">
+
+<h5 class="mb-3">Delivery Address</h5>
+
+<p class="mb-1"><strong>{{ order.address.name }}</strong></p>
+<p class="mb-1">{{ order.address.city }} - {{ order.address.pincode }}</p>
+<p class="mb-0">Phone: {{ order.address.phone }}</p>
+
+</div>
+</div>
+
+
+<!-- Products -->
+<div class="card shadow-sm">
+
+<div class="card-body">
+
+<h5 class="mb-4">Products</h5>
+
+{% for item in order.items.all %}
+
+<div class="row align-items-center mb-3">
+
+<div class="col-md-2">
+
+{% if item.product %}
+<a href="{% url 'product_detail' item.product.slug %}">
+<img src="{{ item.image }}" class="img-fluid rounded" style="height:80px;">
+</a>
+{% else %}
+<img src="{{ item.image }}" class="img-fluid rounded" style="height:80px;">
+{% endif %}
+
+</div>
+
+<div class="col-md-6">
+
+{% if item.product %}
+<a href="{% url 'product_detail' item.product.slug %}" style="text-decoration:none;color:black;">
+<strong>{{ item.product_name }}</strong>
+</a>
+{% else %}
+<strong>{{ item.product_name }}</strong>
+{% endif %}
+
+<p class="mb-0 text-muted">Size: {{ item.size }}</p>
+<p class="mb-0 text-muted">Quantity: {{ item.quantity }}</p>
+
+</div>
+
+<div class="col-md-4 text-end">
+
+<strong>₹{{ item.price }}</strong>
+
+</div>
+
+</div>
+
+<hr>
+
+{% endfor %}
+
+<div class="text-end">
+
+<h5>Total: ₹{{ order.total }}</h5>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+{% endblock %}

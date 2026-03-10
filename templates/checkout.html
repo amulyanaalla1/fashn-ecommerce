@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<style>
+
+.checkout-container{
+    max-width:1100px;
+}
+
+.address-card{
+    border:1px solid #e5e5e5;
+    border-radius:8px;
+    padding:16px;
+    margin-bottom:15px;
+    cursor:pointer;
+    transition:0.2s;
+}
+
+.address-card:hover{
+    border-color:#000;
+}
+
+.address-card input[type="radio"]{
+    transform:scale(1.2);
+    margin-right:12px;
+    margin-top:4px;
+}
+
+.address-content{
+    font-size:14px;
+    line-height:1.6;
+}
+
+.place-btn{
+    height:45px;
+    font-weight:600;
+}
+
+.summary-card{
+    position:sticky;
+    top:100px;
+}
+
+</style>
+
+
+<div class="container checkout-container mt-5">
+
+<h2 class="mb-4">Checkout</h2>
+
+<div class="row">
+
+<!-- LEFT SIDE -->
+<div class="col-md-8">
+
+<h5 class="mb-3">Select Delivery Address</h5>
+
+<form method="POST">
+{% csrf_token %}
+
+{% for address in addresses %}
+
+<label class="address-card d-flex">
+
+<input type="radio" name="address" value="{{ address.id }}" required>
+
+<div class="address-content">
+
+<strong>{{ address.full_name }}</strong><br>
+
+{{ address.street }}<br>
+
+{{ address.city }} - {{ address.pincode }}<br>
+
+Phone: {{ address.phone }}
+
+</div>
+
+</label>
+
+{% empty %}
+
+<p>No address found</p>
+
+{% endfor %}
+
+<a href="{% url 'add_address' %}" class="btn btn-outline-dark mb-3">
++ Add New Address
+</a>
+
+<button type="submit" class="btn btn-dark w-100 place-btn">
+Place Order
+</button>
+
+</form>
+
+</div>
+
+
+<!-- RIGHT SIDE -->
+<div class="col-md-4">
+
+<div class="card shadow-sm p-3 summary-card">
+
+<h5 class="mb-3">Order Summary</h5>
+
+<hr>
+
+{% for item in cart.values %}
+
+<div class="d-flex justify-content-between mb-2">
+
+<div>
+{{ item.name }}
+<small class="text-muted">x{{ item.quantity }}</small>
+</div>
+
+<div>
+₹ {{ item.price|floatformat:0 }}
+</div>
+
+</div>
+
+{% endfor %}
+
+<hr>
+
+<div class="d-flex justify-content-between fw-bold">
+
+<span>Total</span>
+
+<span>₹ {{ total|floatformat:0 }}</span>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+{% endblock %}

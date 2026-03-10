@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="row">
+
+  <div class="col-12">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+      <h4 class="fw-bold">
+        {% if category %}
+          {{ category.name }}
+        {% else %}
+          All Products
+        {% endif %}
+        <span class="text-muted fs-6">({{ products.paginator.count }} items)</span>
+      </h4>
+
+      <div class="d-flex align-items-center gap-2">
+        
+        <div class="position-relative">
+          <button class="btn btn-outline-dark d-flex align-items-center gap-1" type="button" id="filterBtn">
+            <i class="bi bi-funnel"></i> Filter
+          </button>
+
+          <div id="filterBox" class="card shadow p-3 d-none" style="position: absolute; right: 0; top: 45px; z-index: 1000; width: 250px;">
+            <form method="GET">
+              <label class="form-label small fw-bold">Price Range</label>
+              <div class="d-flex gap-2 mb-3">
+                <input type="number" name="min" class="form-control form-control-sm" placeholder="Min" value="{{ request.GET.min_price }}">
+                <input type="number" name="max" class="form-control form-control-sm" placeholder="Max" value="{{ request.GET.max_price }}">
+              </div>
+              <button type="submit" class="btn btn-dark btn-sm w-100">Apply Filter</button>
+            </form>
+          </div>
+        </div>
+
+        <form method="GET">
+          <input type="hidden" name="min_price" value="{{ request.GET.min_price }}">
+          <input type="hidden" name="max_price" value="{{ request.GET.max_price }}">
+          
+          <select name="sort"
+                  class="form-select"
+                  style="width:160px;"
+                  onchange="this.form.submit()">
+            <option value="">Sort By</option>
+            <option value="price_low" {% if request.GET.sort == 'price_low' %}selected{% endif %}>Price: Low to High</option>
+            <option value="price_high" {% if request.GET.sort == 'price_high' %}selected{% endif %}>Price: High to Low</option>
+            
+          </select>
+        </form>
+
+      </div>
+    </div>
+
+    <div class="row">
+      {% for product in products %}
+      <div class="col-lg-3 col-md-4 col-6 mb-4"> <div class="card shadow-sm border-0 h-100">
+        <a href={% url 'product_detail' product.slug %}>
+          <img src="{{ product.image.url }}"
+               class="card-img-top"
+               style="height:350px; object-fit:cover;">
+        <a/>
+          <div class="card-body text-center">
+            <h6>{{ product.name }}</h6>
+            <p class="text-muted mb-2">₹{{ product.price }}</p>
+            <a href="{% url 'product_detail' product.slug %}"
+               class="btn btn-dark btn-sm w-100">
+               View Product
+            </a>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <div class="col-12 text-center py-5">
+          <p>No products found in this range.</p>
+      </div>
+      {% endfor %}
+    </div>
+
+    <nav class="mt-4">
+      <ul class="pagination justify-content-center">
+        {% if products.has_previous %}
+        <li class="page-item">
+          <a class="page-link text-dark" href="?page={{ products.previous_page_number }}{% if request.GET.min_price %}&min_price={{ request.GET.min_price }}{% endif %}{% if request.GET.max_price %}&max_price={{ request.GET.max_price }}{% endif %}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}">
+             Previous
+          </a>
+        </li>
+        {% endif %}
+        {% if products.has_next %}
+        <li class="page-item">
+          <a class="page-link text-dark" href="?page={{ products.next_page_number }}{% if request.GET.min_price %}&min_price={{ request.GET.min_price }}{% endif %}{% if request.GET.max_price %}&max_price={{ request.GET.max_price }}{% endif %}{% if request.GET.sort %}&sort={{ request.GET.sort }}{% endif %}">
+             Next
+          </a>
+        </li>
+        {% endif %}
+      </ul>
+    </nav>
+
+  </div>
+</div>
+
+<script>
+  document.getElementById('filterBtn').addEventListener('click', function() {
+    var box = document.getElementById('filterBox');
+    if (box.classList.contains('d-none')) {
+      box.classList.remove('d-none');
+    } else {
+      box.classList.add('d-none');
+    }
+  });
+
+  // Close box when clicking outside
+  window.addEventListener('click', function(e) {
+    if (!document.getElementById('filterBtn').contains(e.target) && !document.getElementById('filterBox').contains(e.target)) {
+      document.getElementById('filterBox').classList.add('d-none');
+    }
+  });
+</script>
+
+{% endblock %}

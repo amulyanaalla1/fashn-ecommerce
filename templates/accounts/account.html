@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<!-- PERSONAL DETAILS -->
+
+<div class="card shadow-sm mb-4">
+<div class="card-body">
+
+<h2 class="mb-4">My Profile</h2>
+
+<div class="card shadow-sm p-4">
+
+<h5 class="mb-4">Personal Details</h5>
+
+<form method="POST">
+{% csrf_token %}
+
+<div class="row">
+
+<div class="col-md-6 mb-3">
+<label class="form-label">First Name</label>
+{{ form.first_name }}
+</div>
+
+<div class="col-md-6 mb-3">
+<label class="form-label">Last Name</label>
+{{ form.last_name }}
+</div>
+
+<div class="col-md-6 mb-3">
+<label class="form-label">Email</label>
+{{ form.email }}
+</div>
+
+<div class="col-md-6 mb-3">
+<label class="form-label">Date of Birth</label>
+{{ form.dob }}
+</div>
+
+<div class="col-md-6 mb-3">
+<label class="form-label">Mobile Number</label>
+{{ form.phone }}
+</div>
+
+
+</div>
+
+<div class="mt-3">
+<button class="btn btn-dark px-4">Save Profile</button>
+</div>
+
+</form>
+
+</div>
+</div>
+</div>
+
+<!-- ADDRESS SECTION -->
+
+<div class="card shadow-sm mb-4">
+<div class="card-body">
+
+<h5 class="mb-3">Addresses</h5>
+
+{% for address in addresses %}
+
+<div class="border rounded p-3 mb-3">
+
+<strong>{{ address.full_name }}</strong><br>
+
+{{ address.street }} <br>
+{{ address.city }}, {{ address.state }} - {{ address.pincode }} <br>
+
+Phone: {{ address.phone }}
+
+<a href="{% url 'delete_address' address.id %}"
+class="btn btn-danger btn-sm"
+onclick="return confirm('Delete this address?')">
+Delete
+</a>
+
+</div>
+
+{% empty %}
+
+<p>No addresses added yet.</p>
+
+{% endfor %}
+
+</div>
+</div>
+
+
+
+<!-- ADD ADDRESS -->
+
+<div class="card shadow-sm">
+<div class="card-body">
+
+<h5 class="mb-3">Add New Address</h5>
+
+<form method="POST" action="{% url 'add_address' %}">
+
+{% csrf_token %}
+
+<div class="row">
+
+<div class="col-md-6 mb-3">
+<input type="text" name="full_name" class="form-control" placeholder="Full Name">
+</div>
+
+<div class="col-md-6 mb-3">
+<input type="text" name="phone" class="form-control" placeholder="Phone">
+</div>
+
+<div class="col-md-12 mb-3">
+<input type="text" name="street" class="form-control" placeholder="Street Address">
+</div>
+
+<div class="col-md-4 mb-3">
+<input type="text" name="city" class="form-control" placeholder="City">
+</div>
+
+<div class="col-md-4 mb-3">
+<input type="text" name="state" class="form-control" placeholder="State">
+</div>
+
+<div class="col-md-4 mb-3">
+<input type="text" name="pincode" class="form-control" placeholder="Pincode">
+</div>
+
+</div>
+
+<button class="btn btn-dark">
+Add Address
+</button>
+
+</form>
+
+</div>
+</div>
+
+</div>
+
+{% endblock %}

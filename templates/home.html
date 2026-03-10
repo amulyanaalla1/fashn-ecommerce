@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<div class="container-fluid mt-4 px-3">
+
+<!-- HERO BANNER -->
+<div id="heroCarousel" class="carousel slide mb-5" data-bs-ride="carousel">
+
+<div class="carousel-inner">
+ <div class="carousel-item active">
+<img src="{% static 'images/men-banner.jpg' %}" class="d-block w-100 hero-banner">
+</div> 
+
+<div class="carousel-item">
+<img src="{% static 'images/women-banner.jpg' %}" class="d-block w-100 hero-banner">
+</div>
+
+<div class="carousel-item">
+<img src="{% static 'images/couple-banner.jpg' %}" class="d-block w-100 hero-banner">
+</div>
+
+<div class="carousel-item">
+<img src="{% static 'images/kids-banner.jpg' %}" class="d-block w-100 hero-banner">
+</div>
+
+</div>
+
+<button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+<span class="carousel-control-prev-icon"></span>
+</button>
+
+<button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+<span class="carousel-control-next-icon"></span>
+</button>
+
+</div>
+
+
+<!-- TRENDING PRODUCTS -->
+<h3 class="mb-4 fw-bold">Trending Products</h3>
+
+<div class="row">
+
+{% for product in products %}
+
+<div class="col-lg-3 col-md-4 col-6 mb-4">
+
+<div class="card product-card shadow-sm h-100">
+
+<a href="{% url 'product_detail' product.slug %}">
+<img src="{{ product.image.url }}" class="card-img-top product-img">
+</a>
+
+<div class="card-body">
+
+<h6 class="card-title">{{ product.name }}</h6>
+
+<p class="text-muted small mb-1">{{ product.brand }}</p>
+
+<p class="fw-bold">₹{{ product.price }}</p>
+
+<a href="{% url 'product_detail' product.slug %}" class="btn btn-dark w-100">
+View Product
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+</div>
+
+
+<style>
+
+.hero-banner{
+height:420px;
+object-fit:cover;
+border-radius:8px;
+}
+
+.product-card{
+border:none;
+transition:0.3s;
+}
+
+.product-card:hover{
+transform:translateY(-5px);
+}
+
+.product-img{
+height:280px;
+object-fit:cover;
+}
+
+</style>
+
+{% endblock %}

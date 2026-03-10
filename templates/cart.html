@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+<h3 class="mb-4">Shopping Cart</h3>
+
+{% if cart %}
+
+{% for key,item in cart.items %}
+
+<div class="card mb-3 shadow-sm">
+
+<div class="card-body">
+
+<div class="row align-items-center">
+
+<!-- PRODUCT IMAGE -->
+<div class="col-md-2 col-4">
+    <img src="{{ item.image }}" 
+    class="img-fluid rounded"
+     style="height:100px; object-fit:cover;">
+</div>
+
+<!-- PRODUCT DETAILS -->
+<div class="col-md-4 col-8">
+
+<h5 class="mb-1">{{ item.name }}</h5>
+
+<p class="mb-1">Price: ₹{{ item.price }}</p>
+
+<p class="mb-1">Size: {{ item.size }}</p>
+
+</div>
+
+<!-- QUANTITY -->
+<div class="col-md-2 mt-3 mt-md-0">
+
+<div class="d-flex align-items-center">
+
+<a href="{% url 'decrease_quantity' key %}" 
+class="btn btn-outline-dark btn-sm me-2">-</a>
+
+<span class="fw-bold">{{ item.quantity }}</span>
+
+<a href="{% url 'increase_quantity' key %}" 
+class="btn btn-outline-dark btn-sm ms-2">+</a>
+
+</div>
+
+</div>
+
+<!-- SUBTOTAL -->
+<div class="col-md-2 mt-3 mt-md-0">
+
+<p class="mb-1 text-muted">Subtotal</p>
+
+<strong>₹{{ item.subtotal }}</strong>
+
+</div>
+
+<!-- REMOVE -->
+<div class="col-md-2 text-md-end mt-3 mt-md-0">
+
+<a href="{% url 'remove_cart' key %}" 
+class="btn btn-danger btn-sm">
+
+Remove
+
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+{% endfor %}
+
+<hr>
+
+<div class="d-flex justify-content-between align-items-center">
+
+<h4>Total: ₹{{ total }}</h4>
+
+<a href="{% url 'checkout' %}" class="btn btn-dark">
+
+Proceed to Checkout
+
+</a>
+
+</div>
+
+{% else %}
+
+<div class="text-center mt-5">
+
+<h5>Your cart is empty</h5>
+
+<a href="{% url 'product_list' %}" class="btn btn-dark mt-3">
+
+Continue Shopping
+
+</a>
+
+</div>
+
+{% endif %}
+
+</div>
+
+{% endblock %}
